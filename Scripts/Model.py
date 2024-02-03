@@ -37,6 +37,7 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
     startTime = time.time()
     
     try:
+
         print("==============================================================")
         print("Step 1: Buffering Route...")
 
@@ -103,6 +104,64 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         startTime = time.time()
 
         print("==============================================================")
+        print("Step 5: Counting Number of Commercial Zones within the buffer...")
+
+        # Filter out commercial zones from the zoning data using
+        # filter by attributes GEN_ZON2 = 201
+        ZoningFeature = dataFolder + "Zoning_Area_-_4326\\Zoning Area - 4326.shp"
+        CommercialZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 201")
+
+        # Count number of Commercial Zones feature that intersects with RouteBuffer
+        # using the Select Layer By Location tool
+        CommercialIntersectionRes = arcpy.SelectLayerByLocation_management(CommercialZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
+
+        CommercialResult = int(arcpy.GetCount_management(CommercialIntersectionRes).getOutput(0))
+        result["Number of Commercial Zones"] = CommercialResult
+
+        print("Finished Counting Number of Commercial Zones within the buffer: " + str(CommercialResult))
+        print("Step 5: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
+
+        print("==============================================================")
+        print("Step 6: Counting Number of Residential Zones within the buffer...")
+
+        # Filter out residential zones from the zoning data using
+        # filter by attributes GEN_ZON2 = 0 OR 101
+        ResidentialZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 0 OR GEN_ZON2 = 101")
+
+        # Count number of Residential Zones feature that intersects with RouteBuffer
+        # using the Select Layer By Location tool
+        ResidentialIntersectionRes = arcpy.SelectLayerByLocation_management(ResidentialZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
+
+        ResidentialResult = int(arcpy.GetCount_management(ResidentialIntersectionRes).getOutput(0))
+        result["Number of Residential Zones"] = ResidentialResult
+
+        print("Finished Counting Number of Residential Zones within the buffer: " + str(ResidentialResult))
+        print("Step 6: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
+
+        print("==============================================================")
+        print("Step 7: Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer...")
+
+        # Filter out mixed use zones from the zoning data using
+        # filter by attributes GEN_ZON2 = 6 OR 202
+        MixedUseZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 6 OR GEN_ZON2 = 202")
+
+        # Count number of Mixed Use Zones feature that intersects with RouteBuffer
+        # using the Select Layer By Location tool
+        MixedUseIntersectionRes = arcpy.SelectLayerByLocation_management(MixedUseZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
+
+        MixedUseResult = int(arcpy.GetCount_management(MixedUseIntersectionRes).getOutput(0))
+        result["Number of Mixed Use (Commercial & Residential) Zones"] = MixedUseResult
+
+        print("Finished Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer: " + str(MixedUseResult))
+        print("Step 7: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
+
+        print("==============================================================")
         print("Analysis completed. Cleaning up...")
 
         # remove the created buffer and intermediate files
@@ -110,9 +169,12 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         arcpy.Delete_management(POIIntersectionRes)
         arcpy.Delete_management(SubwayIntersectionRes)
         arcpy.Delete_management(HighTrafficIntersectionRes)
+        arcpy.Delete_management(CommercialIntersectionRes)
+        arcpy.Delete_management(CommercialZones)
+        arcpy.Delete_management(ResidentialIntersectionRes)
+        arcpy.Delete_management(ResidentialZones)
 
         print("Clean up completed in " + str(round((time.time() - startTime), 2)) + " s.")
-
 
     except Exception as e:
         result["Error"] = str(e)
@@ -122,10 +184,9 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
 if __name__ == '__main__':
     # script: print out prompts
-    print("Starting script...")
+    print("Starting script...\n")
 
-    # keep track of time of execution
-    startTime = time.time()
+    scriptStartTime = time.time()
     
     # if no arguments, print usage
     if len(argv) < 2:
@@ -136,17 +197,63 @@ if __name__ == '__main__':
 
     # Global Environment settings
     with arcpy.EnvManager(scratchWorkspace=workspaceGDB, workspace=workspaceGDB):
-        result = Model(*argv[1:])
+        startTime = time.time()
+        # run models twice with both baseline route and custom route
+        
+        # use baseline model from data and the last 2 arguments 
+        print("Doing baseline analysis...")
+        baselineResult = Model(dataFolder + "2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp", *argv[2:])
+        print("Baseline analysis completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
 
-    print("==============================================================")
-    print("Script completed successfully in " + str(round((time.time() - startTime), 2)) + " s.")
+        startTime = time.time()
+
+        # use the model with the given arguments
+        print("Doing analysis with test route...")
+        result = Model(*argv[1:])
+        print("Analysis with test route completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
 
     if "Error" in result:
-        print("\nScript ended with error: " + str(result["Error"]))
+        print("Script ended in " + str(round((time.time() - scriptStartTime), 2)) + " s. with error:")
+        print(result["Error"])
         exit(1)
     else:
-        print("\nResult:")
-        
+        print("Script ended successfully in " + str(round((time.time() - scriptStartTime), 2)) + " s.")
+
         # print result
+        print("\nResult:")
         for key, value in result.items():
             print(f"{key}: {value}")
+
+        # print baseline result
+        print("\nBaseline Result:")
+        for key, value in baselineResult.items():
+            print(f"{key}: {value}")
+
+        # calculate the percentage difference of custom route from baseline
+        diffResult = {}
+        for key, value in result.items():
+            if key in baselineResult:
+                newKey = key.replace("Number of ", "")
+                newKey = "\n".join([newKey[i:i+30] for i in range(0, len(newKey), 30)])
+                if baselineResult[key] == 0:
+                    # if baseline is 0, use 0.0001 to avoid division by zero
+                    diffResult[newKey] = ((value - baselineResult[key]) / 0.0001) * 100
+                else:
+                    diffResult[newKey] = ((value - baselineResult[key]) / baselineResult[key]) * 100
+        
+        # plot the difference in a horizontal bar chart
+        import matplotlib.pyplot as plt
+
+        plt.barh(range(len(diffResult)), list(diffResult.values()), align='center')
+        plt.yticks(range(len(diffResult)), list(diffResult.keys()))
+        plt.yticks(fontsize=8, rotation=45)
+        plt.xlabel('Percentage Difference')
+        plt.title('Test Route Performance from 2023 Baseline')
+
+        # show bar labels inside bar with name of the feature
+        for index, value in enumerate(diffResult.values()):
+            plt.text(value, index, str(round(value, 2)) + "%", fontsize=8)
+
+        plt.show()
+
+        exit(0)
