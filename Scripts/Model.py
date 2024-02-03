@@ -21,6 +21,13 @@ import arcpy
 import time
 from sys import argv
 
+# Root folder may need to be changed based on the location of the project
+rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
+
+# This should not be changed if no folder structure is changed
+workspaceGDB = rootFolder + "TWM.gdb"
+dataFolder = rootFolder + "Data\\"
+
 def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
     # keep track of result
     result = {}
@@ -34,7 +41,7 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         print("Step 1: Buffering Route...")
 
         # Create a buffer around the route
-        RouteBuffer = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\TWM.gdb\\RouteBuffer"
+        RouteBuffer = rootFolder + "RouteBuffer"
         # if the buffer already exists, delete it
         if arcpy.Exists(RouteBuffer):
             print("File with conflicting name found, deleting existing RouteBuffer file.")
@@ -43,19 +50,19 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         arcpy.Buffer_analysis(Route, RouteBuffer, str(BufferSize) + " " + BufferSizeUnit, "FULL", "ROUND", "NONE", "", "PLANAR")
 
         print("Finished Buffering Route: " + RouteBuffer)
-        print("Step 1: Completed in " + str(round((time.time() - startTime), 2)) + " seconds.")
+        print("Step 1: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
         print("==============================================================")
         print("Step 2: Counting Points of Interest (POI) within the buffer...")
 
         # Count number of POI feature that intersects with RouteBuffer 
         # using the Select Layer By Location tool
-        POIFeature = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\Data\\Places_of_Interests\\Places of Interest and Attractions - 4326.shp"
+        POIFeature = dataFolder + "Places_of_Interests\\Places of Interest and Attractions - 4326.shp"
         arcpy.SelectLayerByLocation_management(POIFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
         POIResult = int(arcpy.GetCount_management(POIFeature).getOutput(0))
 
         print("Finished Counting Points of Interest (POI) within the buffer: " + str(POIResult))
-        print("Step 2: Completed in " + str(round((time.time() - startTime), 2)) + " seconds.")
+        print("Step 2: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
         result["Number of Places of Interests"] = POIResult
     except Exception as e:
@@ -66,7 +73,7 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
 if __name__ == '__main__':
     # script: print out prompts
-    print("Model.py running...")
+    print("Starting analysis...")
 
     # keep track of time of execution
     startTime = time.time()
@@ -79,14 +86,14 @@ if __name__ == '__main__':
 
 
     # Global Environment settings
-    with arcpy.EnvManager(scratchWorkspace="C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\TWM.gdb", workspace="C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\TWM.gdb"):
+    with arcpy.EnvManager(scratchWorkspace=workspaceGDB, workspace=workspaceGDB):
         result = Model(*argv[1:])
 
     print("==============================================================")
-    print("Finished running Model.py in " + str(round((time.time() - startTime), 2)) + " seconds.")
+    print("Finished analysis in " + str(round((time.time() - startTime), 2)) + " s.")
 
     if "Error" in result:
-        print("\nScript ended with error: " + str(result["Error"]))
+        print("\nAnalysis ended with error: " + str(result["Error"]))
         exit(1)
     else:
         print("\nResult:")
