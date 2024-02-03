@@ -52,19 +52,23 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         print("Finished Buffering Route: " + RouteBuffer)
         print("Step 1: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
+        startTime = time.time()
+
         print("==============================================================")
         print("Step 2: Counting Points of Interest (POI) within the buffer...")
 
         # Count number of POI feature that intersects with RouteBuffer 
         # using the Select Layer By Location tool
         POIFeature = dataFolder + "Places_of_Interests\\Places of Interest and Attractions - 4326.shp"
-        arcpy.SelectLayerByLocation_management(POIFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+        POIIntersectionRes = arcpy.SelectLayerByLocation_management(POIFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
 
-        POIResult = int(arcpy.GetCount_management(POIFeature).getOutput(0))
+        POIResult = int(arcpy.GetCount_management(POIIntersectionRes).getOutput(0))
         result["Number of Places of Interests"] = POIResult
 
         print("Finished Counting Points of Interest (POI) within the buffer: " + str(POIResult))
         print("Step 2: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
 
         print("==============================================================")
         print("Step 3: Counting Subway Stations within the buffer...")
@@ -72,13 +76,15 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         # Count number of Subway Stations feature that intersects with RouteBuffer
         # using the Select Layer By Location tool
         SubwayFeature = dataFolder + "SubwayStops\\TorontoSubwayStations_Ridership.shp"
-        arcpy.SelectLayerByLocation_management(SubwayFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+        SubwayIntersectionRes = arcpy.SelectLayerByLocation_management(SubwayFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
 
-        SubwayResult = int(arcpy.GetCount_management(SubwayFeature).getOutput(0))
+        SubwayResult = int(arcpy.GetCount_management(SubwayIntersectionRes).getOutput(0))
         result["Number of Subway Stations"] = SubwayResult
 
         print("Finished Counting Subway Stations within the buffer: " + str(SubwayResult))
         print("Step 3: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
 
         print("==============================================================")
         print("Step 4: Counting High Traffic Intersections within the buffer...")
@@ -86,13 +92,26 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         # Count number of High Traffic Intersections feature that intersects with RouteBuffer
         # using the Select Layer By Location tool
         HighTrafficFeature = dataFolder + "above_avg_car_intersections\\above_avg_car_intersections.shp"
-        arcpy.SelectLayerByLocation_management(HighTrafficFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+        HighTrafficIntersectionRes = arcpy.SelectLayerByLocation_management(HighTrafficFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
 
-        HighTrafficResult = int(arcpy.GetCount_management(HighTrafficFeature).getOutput(0))
+        HighTrafficResult = int(arcpy.GetCount_management(HighTrafficIntersectionRes).getOutput(0))
         result["Number of High Traffic Intersections"] = HighTrafficResult
 
         print("Finished Counting High Traffic Intersections within the buffer: " + str(HighTrafficResult))
         print("Step 4: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
+
+        print("==============================================================")
+        print("Analysis completed. Cleaning up...")
+
+        # remove the created buffer and intermediate files
+        arcpy.Delete_management(RouteBuffer)
+        arcpy.Delete_management(POIIntersectionRes)
+        arcpy.Delete_management(SubwayIntersectionRes)
+        arcpy.Delete_management(HighTrafficIntersectionRes)
+
+        print("Clean up completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
 
     except Exception as e:
@@ -103,7 +122,7 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
 if __name__ == '__main__':
     # script: print out prompts
-    print("Starting analysis...")
+    print("Starting script...")
 
     # keep track of time of execution
     startTime = time.time()
@@ -120,10 +139,10 @@ if __name__ == '__main__':
         result = Model(*argv[1:])
 
     print("==============================================================")
-    print("Finished analysis in " + str(round((time.time() - startTime), 2)) + " s.")
+    print("Script completed successfully in " + str(round((time.time() - startTime), 2)) + " s.")
 
     if "Error" in result:
-        print("\nAnalysis ended with error: " + str(result["Error"]))
+        print("\nScript ended with error: " + str(result["Error"]))
         exit(1)
     else:
         print("\nResult:")
