@@ -59,12 +59,42 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         # using the Select Layer By Location tool
         POIFeature = dataFolder + "Places_of_Interests\\Places of Interest and Attractions - 4326.shp"
         arcpy.SelectLayerByLocation_management(POIFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+
         POIResult = int(arcpy.GetCount_management(POIFeature).getOutput(0))
+        result["Number of Places of Interests"] = POIResult
 
         print("Finished Counting Points of Interest (POI) within the buffer: " + str(POIResult))
         print("Step 2: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
-        result["Number of Places of Interests"] = POIResult
+        print("==============================================================")
+        print("Step 3: Counting Subway Stations within the buffer...")
+
+        # Count number of Subway Stations feature that intersects with RouteBuffer
+        # using the Select Layer By Location tool
+        SubwayFeature = dataFolder + "SubwayStops\\TorontoSubwayStations_Ridership.shp"
+        arcpy.SelectLayerByLocation_management(SubwayFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+
+        SubwayResult = int(arcpy.GetCount_management(SubwayFeature).getOutput(0))
+        result["Number of Subway Stations"] = SubwayResult
+
+        print("Finished Counting Subway Stations within the buffer: " + str(SubwayResult))
+        print("Step 3: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        print("==============================================================")
+        print("Step 4: Counting High Traffic Intersections within the buffer...")
+
+        # Count number of High Traffic Intersections feature that intersects with RouteBuffer
+        # using the Select Layer By Location tool
+        HighTrafficFeature = dataFolder + "above_avg_car_intersections\\above_avg_car_intersections.shp"
+        arcpy.SelectLayerByLocation_management(HighTrafficFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
+        
+        HighTrafficResult = int(arcpy.GetCount_management(HighTrafficFeature).getOutput(0))
+        result["Number of High Traffic Intersections"] = HighTrafficResult
+
+        print("Finished Counting High Traffic Intersections within the buffer: " + str(HighTrafficResult))
+        print("Step 4: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+
     except Exception as e:
         result["Error"] = str(e)
     finally:
