@@ -2,7 +2,7 @@
 GIS Script for Toronto Waterfront Marathon Route Analysis to be used in ArcGIS
 Pro environment.
 
-This script is created by The Toronto Waterfront Marathon (TWM) team to analyse
+This script is created by the Toronto Waterfront Marathon (TWM) team to analyse
 and evaluate marathon routes against various criteria. It is a project conducted
 in  collaboration with Tata Consultancy Services & Canada Running Series as 
 part of the Multidisciplinary Urban Capstone Project (MUCP) at the University
@@ -87,7 +87,7 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         # using the Select Layer By Location tool
         HighTrafficFeature = dataFolder + "above_avg_car_intersections\\above_avg_car_intersections.shp"
         arcpy.SelectLayerByLocation_management(HighTrafficFeature, "INTERSECT", RouteBuffer, "", "NEW_SELECTION")
-        
+
         HighTrafficResult = int(arcpy.GetCount_management(HighTrafficFeature).getOutput(0))
         result["Number of High Traffic Intersections"] = HighTrafficResult
 
