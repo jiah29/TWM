@@ -162,6 +162,30 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         startTime = time.time()
 
         print("==============================================================")
+        print("Step 8: Calculating Areas of Business Improvement Areas within the buffer...")
+
+        # Find overlap using the Count Overlapping features tool
+        BIAFeature = dataFolder + "Business Improvement Areas Data - 4326\\Business Improvement Areas Data - 4326.shp"
+        BIAOverlapRes = arcpy.CountOverlappingFeatures_analysis([BIAFeature, RouteBuffer], "BIAOverlapRes", 1)
+
+        # Calculate area of overlap using the Calculate Geometry tool
+        BIAOverlapAreaRes = arcpy.CalculateGeometryAttributes_management(
+            in_features=BIAOverlapRes, 
+            geometry_property=[["Area_m2", "AREA_GEODESIC"]], 
+            length_unit="",
+            area_unit="SQUARE_METERS")
+        
+        # Select record with attribute COUNT = 2
+        ValidBIAOverlapAreaRes = arcpy.SelectLayerByAttribute_management(BIAOverlapAreaRes, "NEW_SELECTION", "COUNT_ = 2")
+
+        # sum the area of the selected records using the Summary Statistics tool
+        SummarySumTable = arcpy.analysis.Statistics(ValidBIAOverlapAreaRes, "SummarySumTable", [["Area_m2", "SUM"]])
+        result["Areas of Business Improvement Areas"] = int(arcpy.da.SearchCursor(SummarySumTable, "SUM_Area_m2").next()[0])
+
+        print("Finished Calculating Areas of Business Improvement Areas within the buffer: " + str(result["Areas of Business Improvement Areas"]) + " m2")
+        print("Step 8: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        print("==============================================================")
         print("Analysis completed. Cleaning up...")
 
         # remove the created buffer and intermediate files
@@ -173,6 +197,12 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         arcpy.Delete_management(CommercialZones)
         arcpy.Delete_management(ResidentialIntersectionRes)
         arcpy.Delete_management(ResidentialZones)
+        arcpy.Delete_management(MixedUseZones)
+        arcpy.Delete_management(MixedUseIntersectionRes)
+        arcpy.Delete_management(BIAOverlapRes)
+        arcpy.Delete_management(BIAOverlapAreaRes)
+        arcpy.Delete_management(ValidBIAOverlapAreaRes)
+        arcpy.Delete_management(SummarySumTable)
 
         print("Clean up completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
