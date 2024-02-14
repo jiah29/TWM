@@ -3,7 +3,7 @@ Script to rank routes based on GIS evaluations.
 
 This script is created by the Toronto Waterfront Marathon (TWM) team to analyse
 and evaluate marathon routes against various criteria. It is a project conducted
-in  collaboration with Tata Consultancy Services & Canada Running Series as 
+in collaboration with Tata Consultancy Services & Canada Running Series as 
 part of the Multidisciplinary Urban Capstone Project (MUCP) at the University
 of Toronto.
 
