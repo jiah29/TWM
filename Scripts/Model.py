@@ -13,7 +13,7 @@ of ArcGIS Pro. Use C:\Program Files\ArcGIS\Pro\bin\Python\scripts\propy.bat
 to activate the conda environment and run the script.
 
 Example Usage (assuming you are in the same directory as propy.bat):
-.\propy.bat {LocationToModel.py} {LocationOfRouteFeature.shp} 100 Meters
+.\propy.bat {LocationToModel.py} {LocationOfRouteFeature.shp} 100 Meters True
 
 Copyright 2024 Toronto Waterfront Marathon Team (MUCP 2023/24)
 """
@@ -218,10 +218,12 @@ if __name__ == '__main__':
 
     scriptStartTime = time.time()
     
-    # if no arguments, print usage
-    if len(argv) < 2:
+    # if not enough arguments, print usage
+    if len(argv) < 5:
         print("Error: Missing arguments")
-        print("Usage: Model.py <Route> <BufferSize> <BufferSizeUnit>")
+        print("Usage: Model.py <Route> <BufferSize> <BufferSizeUnit> <show_chart_bool>")
+        print("Example 1: Model.py C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\Data\\2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp 100 Meters True")
+        print("Example 2: Model.py C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\Data\\2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp 1 Kilometers False")
         exit(1)
 
 
@@ -232,15 +234,17 @@ if __name__ == '__main__':
         
         # use baseline model from data and the last 2 arguments 
         print("Doing baseline analysis...")
-        baselineResult = Model(dataFolder + "2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp", *argv[2:])
+        baselineResult = Model(dataFolder + "2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp", *argv[2:4])
         print("Baseline analysis completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
 
-        startTime = time.time()
+        # if no error in baseline result, run model with the given arguments
+        if "Error" not in baselineResult:
+            startTime = time.time()
 
-        # use the model with the given arguments
-        print("Doing analysis with test route...")
-        result = Model(*argv[1:])
-        print("Analysis with test route completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
+            # use the model with the given arguments
+            print("Doing analysis with test route...")
+            result = Model(*argv[1:4])
+            print("Analysis with test route completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
 
     if "Error" in result:
         print("Script ended in " + str(round((time.time() - scriptStartTime), 2)) + " s. with error:")
@@ -271,19 +275,22 @@ if __name__ == '__main__':
                 else:
                     diffResult[newKey] = ((value - baselineResult[key]) / baselineResult[key]) * 100
         
-        # plot the difference in a horizontal bar chart
-        import matplotlib.pyplot as plt
+        if argv[4] == "False":
+            exit(0)
+        else:
+            # plot the difference in a horizontal bar chart
+            import matplotlib.pyplot as plt
 
-        plt.barh(range(len(diffResult)), list(diffResult.values()), align='center')
-        plt.yticks(range(len(diffResult)), list(diffResult.keys()))
-        plt.yticks(fontsize=8, rotation=45)
-        plt.xlabel('Percentage Difference')
-        plt.title('Test Route Performance from 2023 Baseline')
+            plt.barh(range(len(diffResult)), list(diffResult.values()), align='center')
+            plt.yticks(range(len(diffResult)), list(diffResult.keys()))
+            plt.yticks(fontsize=8, rotation=45)
+            plt.xlabel('Percentage Difference')
+            plt.title('Test Route Performance from 2023 Baseline')
 
-        # show bar labels inside bar with name of the feature
-        for index, value in enumerate(diffResult.values()):
-            plt.text(value, index, str(round(value, 2)) + "%", fontsize=8)
+            # show bar labels inside bar with name of the feature
+            for index, value in enumerate(diffResult.values()):
+                plt.text(value, index, str(round(value, 2)) + "%", fontsize=8)
 
-        plt.show()
+            plt.show()
 
-        exit(0)
+            exit(0)
