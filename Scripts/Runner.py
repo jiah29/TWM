@@ -17,13 +17,14 @@ to run the script.
 
 Copyright 2024 Toronto Waterfront Marathon Team (MUCP 2023/24)
 """
-if __name__ == "__main__":
-    from Model import Model, GetMetrics
-    import pandas as pd
+from Model import Model, GetMetrics
+import pandas as pd
+import time
 
-    # Root folder may need to be changed based on the location of the project
-    rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
+# Root folder may need to be changed based on the location of the project
+rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
 
+def RunModelOnRoutesFromFile() -> pd.DataFrame:
     routes = []
 
     # read test routes from TestRoutesPaths.txt, skipping the first line
@@ -92,9 +93,20 @@ if __name__ == "__main__":
     # print a 2d dataframe representation of the results
     df = pd.DataFrame(results, index=[route[0] for route in routes])
     df.index.name = "Route"
-    print(df)
+
+    return df
+
+
+if __name__ == "__main__":
+    print("Starting script...")
+    startTime = time.time()
+
+    result_df = RunModelOnRoutesFromFile()
 
     # save the results to a csv file
     print("Saving results to Results.csv...")
-    df.to_csv(rootFolder + "Results.csv")
+    result_df.to_csv(rootFolder + "Results.csv")
     print("Results saved to Results.csv")
+
+    endTime = time.time()
+    print("Script ended in", round(endTime - startTime, 2), "s")
