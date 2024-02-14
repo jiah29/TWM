@@ -16,7 +16,12 @@ import pandas as pd
 import sys
 
 def Rank(df: pd.DataFrame) -> pd.DataFrame:
-    return df
+    ranks = df.set_index('Route').rank(method = 'max').add_suffix('-Rank')
+    ranks['Score'] = ranks.mean(axis = 1)
+    
+    ranked_df = pd.merge(df, ranks.reset_index(), on = 'Route')
+    
+    return ranked_df
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
