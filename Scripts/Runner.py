@@ -17,3 +17,62 @@ to run the script.
 
 Copyright 2024 Toronto Waterfront Marathon Team (MUCP 2023/24)
 """
+if __name__ == "__main__":
+    from Model import Model
+
+    # Root folder may need to be changed based on the location of the project
+    rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
+
+    routes = []
+
+    # read test routes from TestRoutesPaths.txt, skipping the first line
+    with open(rootFolder + "TestRoutesPaths.txt", "r") as file:
+        for line in file.readlines()[1:]:
+            # only add if file ends with .shp
+            if line.strip().endswith(".shp"):
+                routes.append(line.strip())
+    print(len(routes), "routes registered succesfully from file.")
+
+    # ask the user if they want to add more routes
+    more_routes = input("Do you want to add more routes? (y/n): ")
+    while more_routes.lower() == "y":
+        route_file = input("Enter the shp route file path: ")
+        # only add if file ends with .shp
+        if route_file.strip().endswith(".shp"):
+            routes.append(route_file)
+        else:
+            print("Invalid file path. Please enter a valid .shp file path.")
+        more_routes = input("Do you want to add more routes? (y/n): ")
+
+    print("Total routes to be processed: ", len(routes))
+
+    if len(routes) == 0:
+        print("No routes to process. Exiting...")
+        exit(0)
+    
+    # ask the user for buffer size
+    buffer_size_unit = input("Enter the buffer size units (m or km): ")
+    while buffer_size_unit.lower() not in ["m", "km"]:
+        print("Invalid buffer size units. Please enter either m or km.")
+        buffer_size_unit = input("Enter the buffer size units (m or km): ")
+    
+    # ask the user for the buffer distance positive whole number
+    buffer_size = input("Enter the buffer distance (whole positive number): ")
+    while (not buffer_size.isdigit()) or (int(buffer_size) <= 0) or (not float(buffer_size).is_integer()):
+        print("Invalid buffer distance. Please enter a valid positive whole number.")
+        buffer_size = input("Enter the buffer distance (whole positive number): ")
+
+    # convert buffer size to appropriate units
+    if buffer_size_unit.lower() == "m":
+        buffer_size_unit = "Meters"
+    else:
+        buffer_size_unit = "Kilometers"
+    
+    # run Model.py for each route
+    for route in routes:
+        print(f"Running Model.py for {route}...")
+        result = Model(route, int(buffer_size), buffer_size_unit)
+        print(f"Model.py for {route} is complete.")
+        print(result)
+
+    

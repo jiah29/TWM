@@ -29,6 +29,8 @@ workspaceGDB = rootFolder + "TWM.gdb"
 dataFolder = rootFolder + "Data\\"
 
 def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
+    print(Route, BufferSize, BufferSizeUnit)
+
     # keep track of result
     result = {}
     # To allow overwriting outputs change overwriteOutput option to True.
@@ -166,12 +168,12 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
         # Find overlap using the Count Overlapping features tool
         BIAFeature = dataFolder + "Business Improvement Areas Data - 4326\\Business Improvement Areas Data - 4326.shp"
-        BIAOverlapRes = arcpy.CountOverlappingFeatures_analysis([BIAFeature, RouteBuffer], "BIAOverlapRes", 1)
+        BIAOverlapRes = arcpy.CountOverlappingFeatures_analysis([BIAFeature, RouteBuffer], None, 1)
 
         # Calculate area of overlap using the Calculate Geometry tool
         BIAOverlapAreaRes = arcpy.CalculateGeometryAttributes_management(
             in_features=BIAOverlapRes, 
-            geometry_property=[["Area_m2", "AREA_GEODESIC"]], 
+            geometry_property=[["Area", "AREA_GEODESIC"]], 
             length_unit="",
             area_unit="SQUARE_METERS")
         
@@ -179,8 +181,8 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         ValidBIAOverlapAreaRes = arcpy.SelectLayerByAttribute_management(BIAOverlapAreaRes, "NEW_SELECTION", "COUNT_ = 2")
 
         # sum the area of the selected records using the Summary Statistics tool
-        SummarySumTable = arcpy.analysis.Statistics(ValidBIAOverlapAreaRes, "SummarySumTable", [["Area_m2", "SUM"]])
-        result["Areas of Business Improvement Areas"] = int(arcpy.da.SearchCursor(SummarySumTable, "SUM_Area_m2").next()[0])
+        SummarySumTable = arcpy.analysis.Statistics(ValidBIAOverlapAreaRes, None, [["Area", "SUM"]])
+        result["Areas of Business Improvement Areas"] = int(arcpy.da.SearchCursor(SummarySumTable, "SUM_Area").next()[0])
 
         print("Finished Calculating Areas of Business Improvement Areas within the buffer: " + str(result["Areas of Business Improvement Areas"]) + " m2")
         print("Step 8: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
@@ -226,6 +228,26 @@ if __name__ == '__main__':
         print("Example 2: Model.py C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\Data\\2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp 1 Kilometers False")
         exit(1)
 
+    if not argv[1].endswith(".shp"):
+        print("Error: Invalid Route: " + argv[1])
+        print("Usage: Route must be a valid .shp file path")
+        exit(1)
+    
+    if (argv[2].isdigit() == False) or (int(argv[2]) <= 0) or (float(argv[2]).is_integer() == False):
+        print("Error: Invalid Buffer Size: " + argv[2])
+        print("Usage: Buffer Size must be a whole positive number")
+        exit(1) 
+
+    if argv[3] != "Meters" and argv[3] != "Kilometers":
+        print("Error: Invalid Buffer Size Unit: " + argv[3])
+        print("Usage: Buffer Size Unit must be either Meters or Kilometers")
+        exit(1)
+    
+    if argv[4] != "True" and argv[4] != "False":
+        print("Error: Invalid show_chart_bool: " + argv[4])
+        print("Usage: show_chart_bool must be either True or False")
+        exit(1)
+    
 
     # Global Environment settings
     with arcpy.EnvManager(scratchWorkspace=workspaceGDB, workspace=workspaceGDB):
@@ -233,18 +255,21 @@ if __name__ == '__main__':
         # run models twice with both baseline route and custom route
         
         # use baseline model from data and the last 2 arguments 
-        print("Doing baseline analysis...")
+        print("Doing baseline evaluation...")
         baselineResult = Model(dataFolder + "2023_TWM_Marathon_Route\\2023_TWM_Marathon_Route.shp", *argv[2:4])
-        print("Baseline analysis completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
+        print("Baseline evaluation completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
 
         # if no error in baseline result, run model with the given arguments
         if "Error" not in baselineResult:
             startTime = time.time()
 
             # use the model with the given arguments
-            print("Doing analysis with test route...")
+            print("Doing evaluation with test route...")
             result = Model(*argv[1:4])
-            print("Analysis with test route completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
+            print("Evaluation with test route completed in " + str(round((time.time() - startTime), 2)) + " s.\n")
+        else:
+            result = baselineResult
+            print("Test route evaluation skipped due to error in baseline evaluation.")
 
     if "Error" in result:
         print("Script ended in " + str(round((time.time() - scriptStartTime), 2)) + " s. with error:")

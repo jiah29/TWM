@@ -1,0 +1,2 @@
+## TST ROUTE FILE PATHS - MAKE SURE TO VERIFY THE FILE PATH HERE BEFORE RUNNIGN RUNNER.PY  ##
+C:\Users\14168\Desktop\TWM_Marathon_Proto_Route\TWM_Marathon_Proto_Route.shp
