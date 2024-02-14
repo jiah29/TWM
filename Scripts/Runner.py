@@ -18,7 +18,8 @@ to run the script.
 Copyright 2024 Toronto Waterfront Marathon Team (MUCP 2023/24)
 """
 if __name__ == "__main__":
-    from Model import Model
+    from Model import Model, GetMetrics
+    import pandas as pd
 
     # Root folder may need to be changed based on the location of the project
     rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
@@ -26,25 +27,27 @@ if __name__ == "__main__":
     routes = []
 
     # read test routes from TestRoutesPaths.txt, skipping the first line
-    with open(rootFolder + "TestRoutesPaths.txt", "r") as file:
+    with open(rootFolder + "RoutesPaths.txt", "r") as file:
         for line in file.readlines()[1:]:
             # only add if file ends with .shp
             if line.strip().endswith(".shp"):
-                routes.append(line.strip())
+                routeName = line.split(",")[0]
+                routePath = rootFolder + "Data\\" + line.split(",")[1]
+                routes.append((routeName, routePath))
     print(len(routes), "routes registered succesfully from file.")
 
-    # ask the user if they want to add more routes
-    more_routes = input("Do you want to add more routes? (y/n): ")
-    while more_routes.lower() == "y":
-        route_file = input("Enter the shp route file path: ")
-        # only add if file ends with .shp
-        if route_file.strip().endswith(".shp"):
-            routes.append(route_file)
-        else:
-            print("Invalid file path. Please enter a valid .shp file path.")
-        more_routes = input("Do you want to add more routes? (y/n): ")
+    # REMOVE ABILITY TO ADD ROUTES MANUALLY DURING SCRIPT EXECUTION
+    # more_routes = input("Do you want to add more routes? (y/n): ")
+    # while more_routes.lower() == "y":
+    #     route_file = input("Enter the shp route file path: ")
+    #     # only add if file ends with .shp
+    #     if route_file.strip().endswith(".shp"):
+    #         routes.append(route_file)
+    #     else:
+    #         print("Invalid file path. Please enter a valid .shp file path.")
+    #     more_routes = input("Do you want to add more routes? (y/n): ")
 
-    print("Total routes to be processed: ", len(routes))
+    # print("Total routes to be processed: ", len(routes))
 
     if len(routes) == 0:
         print("No routes to process. Exiting...")
@@ -67,12 +70,31 @@ if __name__ == "__main__":
         buffer_size_unit = "Meters"
     else:
         buffer_size_unit = "Kilometers"
+
+    list_of_metrics = GetMetrics()
+    results = {}
+    for metric in list_of_metrics:
+        results[metric] = []
     
     # run Model.py for each route
-    for route in routes:
-        print(f"Running Model.py for {route}...")
+    for route_name, route in routes:
+        print(f"Running Model.py for {route_name}...")
         result = Model(route, int(buffer_size), buffer_size_unit)
-        print(f"Model.py for {route} is complete.")
-        print(result)
+        if "Error" in result:
+            print("Error running Model.py for", route)
+            print(result["Error"])
+            exit(1)
+        else:
+            for metric in list_of_metrics:
+                results[metric].append(result[metric]) 
+    print("Finished running Model.py for all routes.")  
 
-    
+    # print a 2d dataframe representation of the results
+    df = pd.DataFrame(results, index=[route[0] for route in routes])
+    df.index.name = "Route"
+    print(df)
+
+    # save the results to a csv file
+    print("Saving results to Results.csv...")
+    df.to_csv(rootFolder + "Results.csv")
+    print("Results saved to Results.csv")

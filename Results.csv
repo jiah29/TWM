@@ -1,0 +1,4 @@
+Route,Number of Places of Interests,Number of Subway Stations,Number of High Traffic Intersections,Number of Commercial Zones,Number of Residential Zones,Number of Mixed Use (Commercial & Residential) Zones,Areas of Business Improvement Areas
+Baseline Route,25,6,41,0,64,119,1642967
+Test Route 1,24,8,53,0,101,145,2026201
+Test Route 2,24,6,40,0,83,157,2023764

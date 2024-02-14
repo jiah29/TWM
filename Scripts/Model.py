@@ -29,8 +29,6 @@ workspaceGDB = rootFolder + "TWM.gdb"
 dataFolder = rootFolder + "Data\\"
 
 def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
-    print(Route, BufferSize, BufferSizeUnit)
-
     # keep track of result
     result = {}
     # To allow overwriting outputs change overwriteOutput option to True.
@@ -212,6 +210,16 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         result["Error"] = str(e)
     finally:
         return result
+    
+def GetMetrics() -> list[str]:
+    return ["Number of Places of Interests", 
+            "Number of Subway Stations", 
+            "Number of High Traffic Intersections", 
+            "Number of Commercial Zones", 
+            "Number of Residential Zones", 
+            "Number of Mixed Use (Commercial & Residential) Zones", 
+            "Areas of Business Improvement Areas"
+            ]
 
 
 if __name__ == '__main__':

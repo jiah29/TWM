@@ -1,0 +1,4 @@
+## ROUTE NAME,ROUTE FILE PATHS FROM DATA FOLDER - FIRST ONE IS ALWAYS THE 2023 BASELINE ROUTE ##
+Baseline Route,2023_TWM_Marathon_Route\2023_TWM_Marathon_Route.shp
+Test Route 1,TestRoute1\TWM_Marathon_Proto_Route.shp
+Test Route 2,TestRoute2\tracks-line.shp
