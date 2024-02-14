@@ -1,6 +1,6 @@
 """
-GIS Script for Toronto Waterfront Marathon Route Analysis to be used in ArcGIS
-Pro environment.
+ArcGIS Model Script for Toronto Waterfront Marathon Route Analysis to be used in 
+ArcGIS Pro environment.
 
 This script is created by the Toronto Waterfront Marathon (TWM) team to analyse
 and evaluate marathon routes against various criteria. It is a project conducted
