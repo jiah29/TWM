@@ -1,6 +1,6 @@
 # Multidisciplinary Urban Capstone Project - Toronto Waterfront Marathon Team (2023/24)
 
-## Marathon Route GIS Evaluation
+## Marathon Routes GIS Evaluation
 
 This repository contains the code and data for the GIS route evaluatin for the Toronto Waterfront Marathon. The script and model created are used specifically to analyse, evaluate and rank a test route against the 2023 baseline route based on several metrics, such as coverage of subway stops and places of interests, using GIS methods. The scripts make use of ArcPy, and require an ArcGIS Pro environment to run. The work is done as part of the Multidisciplinary Urban Capstone Project at the University of Toronto, by the Toronto Waterfront Marathon Team (2023/24), in collaboration with Canada Running Series and Tata Consultancy Services.
 
