@@ -90,7 +90,7 @@ def RunModelOnRoutesFromFile() -> pd.DataFrame:
                 results[metric].append(result[metric]) 
     print("Finished running Model.py for all routes.")  
 
-    # print a 2d dataframe representation of the results
+    # return a 2d dataframe representation of the results
     df = pd.DataFrame(results, index=[route[0] for route in routes])
     df.index.name = "Route"
 
