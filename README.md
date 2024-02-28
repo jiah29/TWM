@@ -14,5 +14,7 @@ TBC
 - TTC Subway Routes & Stops: https://open.toronto.ca/dataset/ttc-routes-and-schedules/
 - Toronto Zoning By-law (Commercial, Residential & Mixed): https://open.toronto.ca/dataset/zoning-by-law/
 - Above average car intersections: derived and filtered from https://open.toronto.ca/dataset/traffic-volumes-at-intersections-for-all-modes/
-- 2023 Toronto Waterfront Marathon Route: prepared and created by the team based on map from Canada Running Series
 - Business Improvement Areas: https://open.toronto.ca/dataset/business-improvement-areas/
+- Property Boundary: https://open.toronto.ca/dataset/property-boundaries/
+
+All marathon route data sources are either created by the team or provided by Canada Running Series.
