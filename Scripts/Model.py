@@ -17,8 +17,10 @@ Example Usage (assuming you are in the same directory as propy.bat):
 
 Copyright 2024 Toronto Waterfront Marathon Team (MUCP 2023/24)
 """
+from typing import Optional, List, Dict
 import arcpy
 import time
+import json
 from sys import argv
 
 # Root folder may need to be changed based on the location of the project
@@ -28,9 +30,11 @@ rootFolder = "C:\\Users\\14168\\Documents\\ArcGIS\\Projects\\TWM\\"
 workspaceGDB = rootFolder + "TWM.gdb"
 dataFolder = rootFolder + "Data\\"
 
-def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
+def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> Dict[str, Optional[int]]:
     # keep track of result
     result = {}
+    # to keep track of features which might need to be cleaned up
+    intermediateFiles = []
     # To allow overwriting outputs change overwriteOutput option to True.
     arcpy.env.overwriteOutput = True
     # keep track of time of execution
@@ -50,6 +54,8 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
         arcpy.Buffer_analysis(Route, RouteBuffer, str(BufferSize) + " " + BufferSizeUnit, "FULL", "ROUND", "NONE", "", "PLANAR")
 
+        intermediateFiles.append(RouteBuffer)
+
         print("Finished Buffering Route: " + RouteBuffer)
         print("Step 1: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
@@ -66,6 +72,8 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         POIResult = int(arcpy.GetCount_management(POIIntersectionRes).getOutput(0))
         result["Number of Places of Interests"] = POIResult
 
+        intermediateFiles.append(POIIntersectionRes)
+        
         print("Finished Counting Points of Interest (POI) within the buffer: " + str(POIResult))
         print("Step 2: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
@@ -82,6 +90,8 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         SubwayResult = int(arcpy.GetCount_management(SubwayIntersectionRes).getOutput(0))
         result["Number of Subway Stations"] = SubwayResult
 
+        intermediateFiles.append(SubwayIntersectionRes)
+
         print("Finished Counting Subway Stations within the buffer: " + str(SubwayResult))
         print("Step 3: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
@@ -97,6 +107,8 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
         HighTrafficResult = int(arcpy.GetCount_management(HighTrafficIntersectionRes).getOutput(0))
         result["Number of High Traffic Intersections"] = HighTrafficResult
+
+        intermediateFiles.append(HighTrafficIntersectionRes)
 
         print("Finished Counting High Traffic Intersections within the buffer: " + str(HighTrafficResult))
         print("Step 4: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
@@ -118,6 +130,9 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         CommercialResult = int(arcpy.GetCount_management(CommercialIntersectionRes).getOutput(0))
         result["Number of Commercial Zones"] = CommercialResult
 
+        intermediateFiles.append(CommercialIntersectionRes)
+        intermediateFiles.append(CommercialZones)
+
         print("Finished Counting Number of Commercial Zones within the buffer: " + str(CommercialResult))
         print("Step 5: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
@@ -137,6 +152,9 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         ResidentialResult = int(arcpy.GetCount_management(ResidentialIntersectionRes).getOutput(0))
         result["Number of Residential Zones"] = ResidentialResult
 
+        intermediateFiles.append(ResidentialIntersectionRes)
+        intermediateFiles.append(ResidentialZones)
+
         print("Finished Counting Number of Residential Zones within the buffer: " + str(ResidentialResult))
         print("Step 6: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
@@ -155,6 +173,9 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
 
         MixedUseResult = int(arcpy.GetCount_management(MixedUseIntersectionRes).getOutput(0))
         result["Number of Mixed Use (Commercial & Residential) Zones"] = MixedUseResult
+
+        intermediateFiles.append(MixedUseIntersectionRes)
+        intermediateFiles.append(MixedUseZones)
 
         print("Finished Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer: " + str(MixedUseResult))
         print("Step 7: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
@@ -182,43 +203,78 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> dict[str, int]:
         SummarySumTable = arcpy.analysis.Statistics(ValidBIAOverlapAreaRes, None, [["Area", "SUM"]])
         result["Areas of Business Improvement Areas"] = int(arcpy.da.SearchCursor(SummarySumTable, "SUM_Area").next()[0])
 
+        intermediateFiles.append(BIAOverlapRes)
+        intermediateFiles.append(BIAOverlapAreaRes)
+        intermediateFiles.append(ValidBIAOverlapAreaRes)
+        intermediateFiles.append(SummarySumTable)
+
         print("Finished Calculating Areas of Business Improvement Areas within the buffer: " + str(result["Areas of Business Improvement Areas"]) + " m2")
         print("Step 8: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+
+        startTime = time.time()
+
+        print("==============================================================")
+        print("Step 9: Counting Number of Condomininiums within the Closed Route")
+
+        # get connected route feature path from json mapping file
+        connectedRouteFilePath = GetConnectedRouteVersionFilePath(Route)
+        if connectedRouteFilePath == None:
+            print("Skipping step 9 as no connected closed route found for current route")
+            result["Number of Condomininiums within the Route Coverage Area"] = None
+        else:
+            ConnectedRouteFile = dataFolder + connectedRouteFilePath
+
+            # convert line feature to polygon
+            ConnectedRoutePolygon = rootFolder + "ConnectedRoutePolygon"
+            arcpy.FeatureToPolygon_management(ConnectedRouteFile, ConnectedRoutePolygon)
+
+            # Select all the condominiums from property data
+            PropertyFeature = dataFolder + "Property Boundaries\\PROPERTY_BOUNDARIES_WGS84.shp"
+            Condominiums = arcpy.SelectLayerByAttribute_management(PropertyFeature, "NEW_SELECTION", "F_TYPE = 'CONDO'")
+
+            # Count how many condominiums are inside the connected route polygon
+            CondominiumsIntersectionRes = arcpy.SelectLayerByLocation_management(Condominiums, "WITHIN", ConnectedRoutePolygon, "", "SUBSET_SELECTION")
+            result["Number of Condomininiums within the Route Coverage Area"] = int(arcpy.GetCount_management(CondominiumsIntersectionRes).getOutput(0))
+
+            intermediateFiles.append(CondominiumsIntersectionRes)
+            intermediateFiles.append(Condominiums)
+            intermediateFiles.append(ConnectedRoutePolygon)
+
+            print("Finished Counting Number of Condomininiums within the Route Coverage Area: " + str(result["Number of Condomininiums within the Route Coverage Area"]))
+
+        print("Step 9: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+    except Exception as e:
+        result["Error"] = str(e)
+    finally:
+        startTime = time.time()
 
         print("==============================================================")
         print("Analysis completed. Cleaning up...")
 
         # remove the created buffer and intermediate files
-        arcpy.Delete_management(RouteBuffer)
-        arcpy.Delete_management(POIIntersectionRes)
-        arcpy.Delete_management(SubwayIntersectionRes)
-        arcpy.Delete_management(HighTrafficIntersectionRes)
-        arcpy.Delete_management(CommercialIntersectionRes)
-        arcpy.Delete_management(CommercialZones)
-        arcpy.Delete_management(ResidentialIntersectionRes)
-        arcpy.Delete_management(ResidentialZones)
-        arcpy.Delete_management(MixedUseZones)
-        arcpy.Delete_management(MixedUseIntersectionRes)
-        arcpy.Delete_management(BIAOverlapRes)
-        arcpy.Delete_management(BIAOverlapAreaRes)
-        arcpy.Delete_management(ValidBIAOverlapAreaRes)
-        arcpy.Delete_management(SummarySumTable)
+        for file in intermediateFiles:
+            arcpy.Delete_management(file)
 
         print("Clean up completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
-    except Exception as e:
-        result["Error"] = str(e)
-    finally:
         return result
+
+def GetConnectedRouteVersionFilePath(Route) -> Optional[str] :
+    file = open(rootFolder + 'RouteToConnectedRouteMapping.json')
+    mappings = json.load(file)
+    routeStrip = Route.split("\\")[-1].strip()
+    file.close()
+    return mappings.get(routeStrip, None)
     
-def GetMetrics() -> list[str]:
+def GetMetrics() -> List[str]:
     return ["Number of Places of Interests", 
             "Number of Subway Stations", 
             "Number of High Traffic Intersections", 
             "Number of Commercial Zones", 
             "Number of Residential Zones", 
             "Number of Mixed Use (Commercial & Residential) Zones", 
-            "Areas of Business Improvement Areas"
+            "Areas of Business Improvement Areas",
+            "Number of Condomininiums within the Route Coverage Area"
             ]
 
 
@@ -299,14 +355,19 @@ if __name__ == '__main__':
         # calculate the percentage difference of custom route from baseline
         diffResult = {}
         for key, value in result.items():
-            if key in baselineResult:
+            if key in baselineResult and value:
+                # rename key to make each line shorter and easier to read
                 newKey = key.replace("Number of ", "")
                 newKey = "\n".join([newKey[i:i+30] for i in range(0, len(newKey), 30)])
-                if baselineResult[key] == 0:
-                    # if baseline is 0, use 0.0001 to avoid division by zero
-                    diffResult[newKey] = ((value - baselineResult[key]) / 0.0001) * 100
-                else:
-                    diffResult[newKey] = ((value - baselineResult[key]) / baselineResult[key]) * 100
+
+                # calculate percentage difference
+                baselineResultValue = baselineResult.get(key, None)
+                if baselineResultValue:
+                    if baselineResultValue == 0:
+                        # if baseline is 0, use 0.0001 to avoid division by zero
+                        diffResult[newKey] = ((value - baselineResultValue) / 0.0001) * 100
+                    else:
+                        diffResult[newKey] = ((value - baselineResultValue) / baselineResultValue) * 100
         
         if argv[4] == "False":
             exit(0)

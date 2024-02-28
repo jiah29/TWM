@@ -79,7 +79,7 @@ def RunModelOnRoutesFromFile() -> pd.DataFrame:
     
     # run Model.py for each route
     for route_name, route in routes:
-        print(f"Running Model.py for {route_name}...")
+        print(f"\nRunning Model.py for {route_name}...")
         result = Model(route, int(buffer_size), buffer_size_unit)
         if "Error" in result:
             print("Error running Model.py for", route)
@@ -87,8 +87,10 @@ def RunModelOnRoutesFromFile() -> pd.DataFrame:
             exit(1)
         else:
             for metric in list_of_metrics:
-                results[metric].append(result[metric]) 
-    print("Finished running Model.py for all routes.")  
+                res = result.get(metric, None)
+                results[metric].append(res)
+
+    print("\nFinished running Model.py for all routes.")  
 
     # return a 2d dataframe representation of the results
     df = pd.DataFrame(results, index=[route[0] for route in routes])
