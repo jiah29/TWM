@@ -3,7 +3,7 @@ Script to rank routes based on GIS evaluations.
 
 This script is created by the Toronto Waterfront Marathon (TWM) team to analyse
 and evaluate marathon routes against various criteria. It is a project conducted
-in  collaboration with Tata Consultancy Services & Canada Running Series as 
+in collaboration with Tata Consultancy Services & Canada Running Series as 
 part of the Multidisciplinary Urban Capstone Project (MUCP) at the University
 of Toronto.
 
@@ -16,7 +16,12 @@ import pandas as pd
 import sys
 
 def Rank(df: pd.DataFrame) -> pd.DataFrame:
-    return df
+    ranks = df.set_index('Route').rank(method = 'max').add_suffix('-Rank')
+    ranks['Score'] = ranks.mean(axis = 1)
+    
+    ranked_df = pd.merge(df, ranks.reset_index(), on = 'Route')
+    
+    return ranked_df
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
