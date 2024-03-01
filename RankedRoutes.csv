@@ -1,7 +1,7 @@
-,Number of Places of Interests Ranks,Number of Subway Stations Ranks,Number of High Traffic Intersections Ranks,Number of Commercial Zones Ranks,Number of Residential Zones Ranks,Number of Mixed Use (Commercial & Residential) Zones Ranks,Areas of Business Improvement Areas Ranks,Number of Condomininiums within the Route Coverage Area Ranks,Score
-Baseline Route,6.0,2.0,5.0,6.0,1.0,1.0,1.0,1.0,2.875
-Proto 1 (Loop),4.0,4.0,1.0,6.0,5.0,2.0,3.0,,3.5714285714285716
-Proto 2 (Full Loop),6.0,6.0,2.0,6.0,6.0,6.0,6.0,,5.428571428571429
-Proto 3 (Quasi-Loop),4.0,3.0,3.0,6.0,4.0,5.0,4.0,,4.142857142857143
-Proto 4 (Out-and-Backs),4.0,2.0,6.0,6.0,2.0,4.0,2.0,,3.7142857142857144
-Proto 5 (TTP),1.0,5.0,4.0,6.0,3.0,3.0,5.0,,3.857142857142857
+,Number of Places of InterestsNumber of Places of Interests Ranks,Number of Subway Stations Ranks, Ranks,Number of Commercial Zones Ranks,Number of Residential Zones Ranks,Number of Mixed Use (Commercial & Residential) Zones Ranks,Areas of Business Improvement Areas Ranks,Number of Condomininiums within the Route Coverage Area Ranks,Score
+Baseline Route,12.0,2.0,-5.0,6.0,1.0,1.0,1.0,1.0,2.375
+Proto 1 (Loop),8.0,4.0,-1.0,6.0,5.0,2.0,3.0,,3.857142857142857
+Proto 2 (Full Loop),12.0,6.0,-2.0,6.0,6.0,6.0,6.0,,5.714285714285714
+Proto 3 (Quasi-Loop),8.0,3.0,-3.0,6.0,4.0,5.0,4.0,,3.857142857142857
+Proto 4 (Out-and-Backs),8.0,2.0,-6.0,6.0,2.0,4.0,2.0,,2.5714285714285716
+Proto 5 (TTP),2.0,5.0,-4.0,6.0,3.0,3.0,5.0,,2.857142857142857

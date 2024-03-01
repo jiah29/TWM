@@ -34,7 +34,7 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
     # Weight the ranks
     for col in ranks.columns:
          if col != 'weight':
-             ranks[col] = ranks[col] * ranks['weight']
+             ranks[col] = ranks[col] * ranks['weight'].astype(int)
 
     ranks = ranks.rename(columns = {'index': 'Route'}).set_index('Route').drop(columns = 'weight').T.add_suffix(' Ranks') # untranspose dataframe
 
