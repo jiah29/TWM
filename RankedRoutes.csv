@@ -1,0 +1,4 @@
+,Number of Places of Interests Ranks,Number of Subway Stations Ranks,Number of High Traffic Intersections Ranks,Number of Commercial Zones Ranks,Number of Residential Zones Ranks,Number of Mixed Use (Commercial & Residential) Zones Ranks,Areas of Business Improvement Areas Ranks,Number of Condomininiums within the Route Coverage Area Ranks,Score
+Baseline Route,3.0,2.0,2.0,3.0,1.0,1.0,1.0,1.0,1.75
+Test Route 1,2.0,3.0,3.0,3.0,3.0,2.0,3.0,,2.7142857142857144
+Test Route 2,2.0,2.0,1.0,3.0,2.0,3.0,2.0,,2.142857142857143

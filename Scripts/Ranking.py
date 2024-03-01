@@ -42,6 +42,14 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
     
     return ranks
 
+def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
+    toConvert = ["Number of Condomininiums within the Route Coverage Area"]
+
+    # multiply the metrics that need to be be converted to maximizing metrics by -1
+    df[toConvert] = df[toConvert].apply(lambda x: -x)
+    
+    return df
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: .\Ranking.py {CSVFileContainingResultDF}")
@@ -50,7 +58,9 @@ if __name__ == "__main__":
     print("Ranking routes based on GIS evaluations...")
 
     df = pd.read_csv(sys.argv[1], index_col=0)
-    print(df)
-    df = Rank(df)
+    dfWithAllMaximingMetrics = ConvertToMaximizingMetrics(df)
+    finalDf = Rank(dfWithAllMaximingMetrics)
+
+    finalDf.to_csv("RankedRoutes.csv")
     
     print("Ranking completed successfully!")
