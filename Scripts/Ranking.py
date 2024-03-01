@@ -61,6 +61,8 @@ if __name__ == "__main__":
     dfWithAllMaximingMetrics = ConvertToMaximizingMetrics(df)
     finalDf = Rank(dfWithAllMaximingMetrics)
 
+    print("Finished ranking routes. Exporting to CSV...")
+
     finalDf.to_csv("RankedRoutes.csv")
     
-    print("Ranking completed successfully!")
+    print("Export completed. Ranking completed successfully!")

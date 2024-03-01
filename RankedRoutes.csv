@@ -1,4 +1,7 @@
 ,Number of Places of Interests Ranks,Number of Subway Stations Ranks,Number of High Traffic Intersections Ranks,Number of Commercial Zones Ranks,Number of Residential Zones Ranks,Number of Mixed Use (Commercial & Residential) Zones Ranks,Areas of Business Improvement Areas Ranks,Number of Condomininiums within the Route Coverage Area Ranks,Score
-Baseline Route,3.0,2.0,2.0,3.0,1.0,1.0,1.0,1.0,1.75
-Test Route 1,2.0,3.0,3.0,3.0,3.0,2.0,3.0,,2.7142857142857144
-Test Route 2,2.0,2.0,1.0,3.0,2.0,3.0,2.0,,2.142857142857143
+Baseline Route,6.0,2.0,2.0,6.0,1.0,1.0,1.0,1.0,2.5
+Proto 1 (Loop),4.0,4.0,6.0,6.0,5.0,2.0,3.0,,4.285714285714286
+Proto 2 (Full Loop),6.0,6.0,5.0,6.0,6.0,6.0,6.0,,5.857142857142857
+Proto 3 (Quasi-Loop),4.0,3.0,4.0,6.0,4.0,5.0,4.0,,4.285714285714286
+Proto 4 (Out-and-Backs),4.0,2.0,1.0,6.0,2.0,4.0,2.0,,3.0
+Proto 5 (TTP),1.0,5.0,3.0,6.0,3.0,3.0,5.0,,3.7142857142857144
