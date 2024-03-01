@@ -43,7 +43,7 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
     return ranks
 
 def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
-    toConvert = ["Number of Condomininiums within the Route Coverage Area"]
+    toConvert = ["Number of High Traffic Intersections"]
 
     # multiply the metrics that need to be be converted to maximizing metrics by -1
     df[toConvert] = df[toConvert].apply(lambda x: -x)
