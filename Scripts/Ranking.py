@@ -16,12 +16,31 @@ import pandas as pd
 import sys
 
 def Rank(df: pd.DataFrame) -> pd.DataFrame:
-    ranks = df.set_index('Route').rank(method = 'max').add_suffix('-Rank')
-    ranks['Score'] = ranks.mean(axis = 1)
+    df_T = df.T # transpose dataframe to get metrics in rows, routes as columns
     
-    ranked_df = pd.merge(df, ranks.reset_index(), on = 'Route')
+    if 'weight' not in df_T.columns:
+        df_T['weight'] = 1 # if weights are not specified, give equal weights of 1
+
+    # Seperate weight column and remove from metrics column
+    wt = pd.DataFrame(df_T['weight'])
+    df_T = df_T.drop(columns = ['weight'])
     
-    return ranked_df
+    # Rank route performance in each metric (ascending rank in value)
+    ranks = df_T.rank(method = 'max', axis = 1)
+
+    # Add back the weights 
+    ranks = pd.merge(ranks.reset_index(), wt.reset_index(), on = 'index')
+
+    # Weight the ranks
+    for col in ranks.columns:
+         if col != 'weight':
+             ranks[col] = ranks[col] * ranks['weight']
+
+    ranks = ranks.rename(columns = {'index': 'Route'}).set_index('Route').drop(columns = 'weight').T.add_suffix(' Ranks') # untranspose dataframe
+
+    ranks['Score'] = ranks.mean(axis = 1) # calculate average rank as score. performance increasing in score
+    
+    return ranks
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
