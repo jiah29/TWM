@@ -17,4 +17,4 @@ TBC
 - Business Improvement Areas: https://open.toronto.ca/dataset/business-improvement-areas/
 - Property Boundary: https://open.toronto.ca/dataset/property-boundaries/
 
-All marathon route data sources are either created by the team or provided by Canada Running Series.
+All marathon route data sources are either created by the team or provided by Canada Running Series/Tata Consultancy Services.
