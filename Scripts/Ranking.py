@@ -38,7 +38,7 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
     ranks = ranks.rename(columns = lambda x: x + " Weighted Ranks")
 
     # calculate average rank as score. performance increasing in score
-    ranks['Weighted Score'] = ranks.mean(axis = 1)
+    ranks['Overall Weighted Score'] = ranks.mean(axis = 1)
 
     return ranks
 
