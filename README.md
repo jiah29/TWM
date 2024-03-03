@@ -12,7 +12,7 @@ Here are the descriptions and instructions for each script defined:
 
 **Model.py**:
 
-This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. 
+This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other helper functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. The latter function makes use of `RouteToConnectedRouteMapping.json` file to find the connected (closed) route file for a given shp file route. Therefore, the json file should be manually updated with the correct mapping if anything is updated or when new routes are added.
 
 Run this script if you want to evaluate and compare a route against the 2023 baseline route. The script takes in 4 arguments:
 - Route: the file path to the shapefile of the route you want to evaluate against the baseline
@@ -21,6 +21,16 @@ Run this script if you want to evaluate and compare a route against the 2023 bas
 - Show Chart Boolean: whether you want to produce a chart for the percentage difference in performance against baseline route
 
 This script needs to be run under ArcGIS Pro environment. Read the docstring in the python file for example and detailed usage. Make sure to update the `rootFolder` variable in the script to the directory of this project in your local environment.
+
+**Runner.py**:
+
+This python script contains a function to run the GIS evaluation model as defined in `Model.py` on a list of routes. The list of routes should be provided in the `RoutesPaths.txt`. It returns the raw result from the GIS evaluation for each defined metrics in the model and export it to a csv file. See `Results.csv` for a sample of the return data.
+
+Run this script if you want a simple and easy way to evaluate a list of routes using the GIS model. Since it makes use of `Model.py`, it needs to be run under ArcGIS Pro environment. Read the docstring in the python file for example and detailed usage. Make sure to update the `rootFolder` variable in the script to the directory of this project in your local environment.
+
+
+
+Sinc this script makes
 
 ## Data Sources
 
