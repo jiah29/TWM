@@ -24,13 +24,20 @@ This script needs to be run under ArcGIS Pro environment. Read the docstring in 
 
 **Runner.py**:
 
-This python script contains a function to run the GIS evaluation model as defined in `Model.py` on a list of routes. The list of routes should be provided in the `RoutesPaths.txt`. It returns the raw result from the GIS evaluation for each defined metrics in the model and export it to a csv file. See `Results.csv` for a sample of the return data.
+This python script contains a function to run the GIS evaluation model as defined in `Model.py` on a list of routes. The list of routes should be provided in the `RoutesPaths.txt`. It returns the raw result from the GIS evaluation for each defined metrics in the model and export it to a csv file. See `Results.csv` for a sample of the return data. _Note that the last row for weight in `Results.csv` is manually added and is not a part of the results produced by this script._
+
+The script takes no argument, but will prompt users in command line for relevant numbers like size of buffer.
 
 Run this script if you want a simple and easy way to evaluate a list of routes using the GIS model. Since it makes use of `Model.py`, it needs to be run under ArcGIS Pro environment. Read the docstring in the python file for example and detailed usage. Make sure to update the `rootFolder` variable in the script to the directory of this project in your local environment.
 
+**Ranking.py**:
 
+This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`. By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`. There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
 
-Sinc this script makes
+The script takes in 1 argument:
+- Result CSV: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row.
+
+This script is indenpendent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
 
 ## Data Sources
 
