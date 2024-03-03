@@ -36,7 +36,10 @@ This python scripts contains a maximizing `Rank` function to rank each route bas
 
 There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
 
-The script takes in 1 argument: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row. It is indenpendent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
+The script takes in 1 argument: 
+- Result CSV: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row.
+
+It is independent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
 
 ## Data Sources
 
