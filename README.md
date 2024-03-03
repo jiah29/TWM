@@ -49,3 +49,8 @@ This script is indenpendent from the other 2 scripts, and hence does not require
 - Property Boundary: https://open.toronto.ca/dataset/property-boundaries/
 
 All marathon route data sources are either created by the team or provided by Canada Running Series/Tata Consultancy Services.
+
+## Resources & Contact
+ArcGIS Pro Python and ArcPy reference: https://pro.arcgis.com/en/pro-app/3.1/arcpy/main/arcgis-pro-arcpy-reference.htm
+
+For any other questions or help, please contact TBC.
