@@ -6,7 +6,21 @@ This repository contains the code and data for the GIS route evaluatin for the T
 
 ## Instructions
 
-TBC
+There are 3 scripts in the Scripts folder, each with its own purposes and functions. Some of the scripts require an active ArcGIS Pro environment to run, so you will need the program installed in your environment. The easiest way to run these scripts is to use the propy.bat script in the Python Scripts folder of the ArcGIS Pro program file, which will activate an active condo environment to execute ArcGIS Python functions. Simply navigate to the Scripts folder in ArcGIS Pro program file (the same directory as propy.bat), then add .\propy.bat in front of the execution commands (i.e. `.\propy.bat <location_to_python_script> <arguments_to_the_python_script>`).
+
+Here are the descriptions and instructions for each script defined:
+
+**Model.py**:
+
+This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. 
+
+Run this script if you want to evaluate and compare a route against the 2023 baseline route. The script takes in 4 arguments:
+- Route: the file path to the shapefile of the route you want to evaluate against the baseline
+- Buffer Size: how big the buffer is for the route for GIS evaluation purpose
+- Buffer Size Unit: the unit of the give buffer size above
+- Show Chart Boolean: whether you want to produce a chart for the percentage difference in performance against baseline route
+
+This script needs to be run under ArcGIS Pro environment. Read the docstring in the python file for example and detailed usage. Make sure to update the `rootFolder` variable in the script to the directory of this project in your local environment.
 
 ## Data Sources
 
