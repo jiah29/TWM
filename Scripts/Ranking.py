@@ -28,25 +28,35 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
     # Rank route performance in each metric (ascending rank in value)
     ranks = df_T.rank(method = 'max', axis = 1)
 
-    # Add back the weights 
-    ranks = pd.merge(ranks.reset_index(), wt.reset_index(), on = 'index')
+    # weight the ranks by multiplying with the weights
+    ranks = ranks.mul(wt['weight'], axis = 0)
 
-    # Weight the ranks
-    for col in ranks.columns:
-         if col != 'weight':
-             ranks[col] = ranks[col] * ranks['weight'].astype(int)
+    # untranspose dataframe
+    ranks = ranks.T
 
-    ranks = ranks.rename(columns = {'index': 'Route'}).set_index('Route').drop(columns = 'weight').T.add_suffix(' Ranks') # untranspose dataframe
+    # rename columns to include "Ranks" suffix
+    ranks = ranks.rename(columns = lambda x: x + " Weighted Ranks")
 
-    ranks['Score'] = ranks.mean(axis = 1) # calculate average rank as score. performance increasing in score
-    
+    # calculate average rank as score. performance increasing in score
+    ranks['Weighted Score'] = ranks.mean(axis = 1)
+
     return ranks
 
 def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
-    toConvert = ["Number of High Traffic Intersections", "Number of Condomininiums within the Route Coverage Area"]
+    toConvert = ["Number of High Traffic Intersections", 
+                 "Number of Condomininiums within the Route Coverage Area"]
+
+    weight_provided = 'weight' in df.T.columns
 
     # multiply the metrics that need to be be converted to maximizing metrics by -1
-    df[toConvert] = df[toConvert].apply(lambda x: -x)
+    for metric in toConvert:
+        if weight_provided:
+            # drop the weight column and add it back after converting the metric
+            weight = df[metric]["weight"]
+            df[metric] = df[metric].drop('weight') * -1
+            df.loc["weight", metric] = weight
+        else:
+            df[metric] = df[metric] * -1
     
     return df
 
@@ -59,6 +69,7 @@ if __name__ == "__main__":
 
     df = pd.read_csv(sys.argv[1], index_col=0)
     dfWithAllMaximingMetrics = ConvertToMaximizingMetrics(df)
+
     finalDf = Rank(dfWithAllMaximingMetrics)
 
     print("Finished ranking routes. Exporting to CSV...")
