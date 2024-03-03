@@ -32,12 +32,11 @@ Run this script if you want a simple and easy way to evaluate a list of routes u
 
 **Ranking.py**:
 
-This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`. By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`. The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRouts.csv` for a sample of returned data. There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
+This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`. By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`. The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRouts.csv` for a sample of returned data. 
 
-The script takes in 1 argument:
-- Result CSV: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row.
+There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
 
-This script is indenpendent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
+The script takes in 1 argument: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row. It is indenpendent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
 
 ## Data Sources
 
