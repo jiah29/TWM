@@ -72,6 +72,7 @@ if __name__ == "__main__":
     print("Ranking routes based on GIS evaluations...")
 
     df = pd.read_csv(sys.argv[1], index_col=0)
+    
     dfWithAllMaximingMetrics = ConvertToMaximizingMetrics(df)
 
     finalDf = Rank(dfWithAllMaximingMetrics)
