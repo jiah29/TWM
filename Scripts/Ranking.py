@@ -44,19 +44,23 @@ def Rank(df: pd.DataFrame) -> pd.DataFrame:
 
 def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
     toConvert = ["Number of High Traffic Intersections", 
-                 "Number of Condomininiums within the Route Coverage Area"]
+                 "Number of Condomininiums within the Route Coverage Area",
+                 "Wide Turns",
+                 "Sharp Turns",
+                 "Elevations"]
 
     weight_provided = 'weight' in df.T.columns
 
     # multiply the metrics that need to be be converted to maximizing metrics by -1
     for metric in toConvert:
-        if weight_provided:
-            # drop the weight column and add it back after converting the metric
-            weight = df[metric]["weight"]
-            df[metric] = df[metric].drop('weight') * -1
-            df.loc["weight", metric] = weight
-        else:
-            df[metric] = df[metric] * -1
+        if metric in df.columns:
+            if weight_provided:
+                # drop the weight column and add it back after converting the metric
+                weight = df[metric]["weight"]
+                df[metric] = df[metric].drop('weight') * -1
+                df.loc["weight", metric] = weight
+            else:
+                df[metric] = df[metric] * -1
     
     return df
 
