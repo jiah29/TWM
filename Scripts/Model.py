@@ -115,31 +115,30 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> Dict[str, Optiona
 
         startTime = time.time()
 
-        print("==============================================================")
-        print("Step 5: Counting Number of Commercial Zones within the buffer...")
+        # print("==============================================================")
+        # print("Step 5: Counting Number of Commercial Zones within the buffer...")
 
-        # Filter out commercial zones from the zoning data using
-        # filter by attributes GEN_ZON2 = 201
-        ZoningFeature = dataFolder + "Zoning_Area_-_4326\\Zoning Area - 4326.shp"
-        CommercialZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 201")
+        # CommercialZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 201")
 
-        # Count number of Commercial Zones feature that intersects with RouteBuffer
-        # using the Select Layer By Location tool
-        CommercialIntersectionRes = arcpy.SelectLayerByLocation_management(CommercialZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
+        # # Count number of Commercial Zones feature that intersects with RouteBuffer
+        # # using the Select Layer By Location tool
+        # CommercialIntersectionRes = arcpy.SelectLayerByLocation_management(CommercialZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
 
-        CommercialResult = int(arcpy.GetCount_management(CommercialIntersectionRes).getOutput(0))
-        result["Number of Commercial Zones"] = CommercialResult
+        # CommercialResult = int(arcpy.GetCount_management(CommercialIntersectionRes).getOutput(0))
+        # result["Number of Commercial Zones"] = CommercialResult
 
-        intermediateFiles.append(CommercialIntersectionRes)
-        intermediateFiles.append(CommercialZones)
+        # intermediateFiles.append(CommercialIntersectionRes)
+        # intermediateFiles.append(CommercialZones)
 
-        print("Finished Counting Number of Commercial Zones within the buffer: " + str(CommercialResult))
-        print("Step 5: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+        # print("Finished Counting Number of Commercial Zones within the buffer: " + str(CommercialResult))
+        # print("Step 5: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
-        startTime = time.time()
+        # startTime = time.time()
 
         print("==============================================================")
         print("Step 6: Counting Number of Residential Zones within the buffer...")
+
+        ZoningFeature = dataFolder + "Zoning_Area_-_4326\\Zoning Area - 4326.shp"
 
         # Filter out residential zones from the zoning data using
         # filter by attributes GEN_ZON2 = 0 OR 101
@@ -160,27 +159,27 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> Dict[str, Optiona
 
         startTime = time.time()
 
-        print("==============================================================")
-        print("Step 7: Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer...")
+        # print("==============================================================")
+        # print("Step 7: Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer...")
 
-        # Filter out mixed use zones from the zoning data using
-        # filter by attributes GEN_ZON2 = 6 OR 202
-        MixedUseZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 6 OR GEN_ZON2 = 202")
+        # # Filter out mixed use zones from the zoning data using
+        # # filter by attributes GEN_ZON2 = 6 OR 202
+        # MixedUseZones = arcpy.SelectLayerByAttribute_management(ZoningFeature, "NEW_SELECTION", "GEN_ZON2 = 6 OR GEN_ZON2 = 202")
 
-        # Count number of Mixed Use Zones feature that intersects with RouteBuffer
-        # using the Select Layer By Location tool
-        MixedUseIntersectionRes = arcpy.SelectLayerByLocation_management(MixedUseZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
+        # # Count number of Mixed Use Zones feature that intersects with RouteBuffer
+        # # using the Select Layer By Location tool
+        # MixedUseIntersectionRes = arcpy.SelectLayerByLocation_management(MixedUseZones, "INTERSECT", RouteBuffer, "", "SUBSET_SELECTION")
 
-        MixedUseResult = int(arcpy.GetCount_management(MixedUseIntersectionRes).getOutput(0))
-        result["Number of Mixed Use (Commercial & Residential) Zones"] = MixedUseResult
+        # MixedUseResult = int(arcpy.GetCount_management(MixedUseIntersectionRes).getOutput(0))
+        # result["Number of Mixed Use (Commercial & Residential) Zones"] = MixedUseResult
 
-        intermediateFiles.append(MixedUseIntersectionRes)
-        intermediateFiles.append(MixedUseZones)
+        # intermediateFiles.append(MixedUseIntersectionRes)
+        # intermediateFiles.append(MixedUseZones)
 
-        print("Finished Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer: " + str(MixedUseResult))
-        print("Step 7: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+        # print("Finished Counting Number of Mixed Use Zones (Commercial & Residential) within the buffer: " + str(MixedUseResult))
+        # print("Step 7: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
-        startTime = time.time()
+        # startTime = time.time()
 
         print("==============================================================")
         print("Step 8: Calculating Areas of Business Improvement Areas within the buffer...")
@@ -270,9 +269,9 @@ def GetMetrics() -> List[str]:
     return ["Number of Places of Interests", 
             "Number of Subway Stations", 
             "Number of High Traffic Intersections", 
-            "Number of Commercial Zones", 
+            # "Number of Commercial Zones", 
             "Number of Residential Zones", 
-            "Number of Mixed Use (Commercial & Residential) Zones", 
+            # "Number of Mixed Use (Commercial & Residential) Zones", 
             "Areas of Business Improvement Areas",
             "Number of Condomininiums within the Route Coverage Area"
             ]

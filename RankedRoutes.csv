@@ -1,7 +1,7 @@
-Route,Number of Places of Interests Weighted Ranks,Number of Subway Stations Weighted Ranks,Number of High Traffic Intersections Weighted Ranks,Number of Commercial Zones Weighted Ranks,Number of Residential Zones Weighted Ranks,Number of Mixed Use (Commercial & Residential) Zones Weighted Ranks,Areas of Business Improvement Areas Weighted Ranks,Number of Condomininiums within the Route Coverage Area Weighted Ranks,Overall Weighted Score
-Baseline Route,12.0,2.0,5.0,6.0,1.0,1.0,1.0,1.0,3.625
-Proto 1 (Loop),8.0,4.0,1.0,6.0,5.0,2.0,3.0,,4.142857142857143
-Proto 2 (Full Loop),12.0,6.0,2.0,6.0,6.0,6.0,6.0,,6.285714285714286
-Proto 3 (Quasi-Loop),8.0,3.0,3.0,6.0,4.0,5.0,4.0,,4.714285714285714
-Proto 4 (Out-and-Backs),8.0,2.0,6.0,6.0,2.0,4.0,2.0,,4.285714285714286
-Proto 5 (TTP),2.0,5.0,4.0,6.0,3.0,3.0,5.0,,4.0
+Route,Number of Places of Interests Weighted Ranks,Number of Subway Stations Weighted Ranks,Number of High Traffic Intersections Weighted Ranks,Number of Residential Zones Weighted Ranks,Areas of Business Improvement Areas Weighted Ranks,Number of Condomininiums within the Route Coverage Area Weighted Ranks,Overall Weighted Score
+Baseline Route,6.0,0.5,5.0,0.25,0.25,0.25,2.0416666666666665
+Proto 1 (Loop),4.0,1.0,1.0,1.25,0.75,,1.6
+Proto 2 (Full Loop),6.0,1.5,2.0,1.5,1.5,,2.5
+Proto 3 (Quasi-Loop),4.0,0.75,3.0,1.0,1.0,,1.95
+Proto 4 (Out-and-Backs),4.0,0.5,6.0,0.5,0.5,,2.3
+Proto 5 (TTP),1.0,1.25,4.0,0.75,1.25,,1.65
