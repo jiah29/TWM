@@ -37,7 +37,8 @@ This python scripts contains a maximizing `Rank` function to rank each route bas
 
 - Note that it is possible to include more than 1 csv files provided that they are in similar structure/format as shown in `Results.csv`.
 - By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`.
-  The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data.
+
+The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data.
 
 There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
 
