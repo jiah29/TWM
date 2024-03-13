@@ -12,7 +12,7 @@ Here are the descriptions and instructions for each script defined:
 
 **Model.py**:
 
-This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other helper functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. The latter function makes use of `RouteToConnectedRouteMapping.json` file to find the connected (closed) route file for a given shp file route. Therefore, the json file should be manually updated with the correct mapping if anything is updated or when new routes are added.
+This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also a helper function, namely GetMetrics, which returns all the metrics used in the model.
 
 Run this script if you want to evaluate and compare a route against the 2023 baseline route. The script takes in 4 arguments:
 
