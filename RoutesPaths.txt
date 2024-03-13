@@ -1,6 +1,6 @@
 ## ROUTE NAME,ROUTE FILE PATHS FROM DATA FOLDER - FIRST ONE IS ALWAYS THE 2023 BASELINE ROUTE ##
 Baseline,TWM-Baseline\TWM-Baseline.shp
-Proto 1.1,TWM-Proto-1_1\route.shp
+Proto 1.1,TWM-Proto-1_1\proto-route-1.shp
 Proto 1.2,TWM-Proto-1_2\TWM-Proto-1-2.shp
 Proto 2.1,TWM-Proto-2_1\TWM-Proto-2-1.shp
 Proto 2.2,TWM-Proto-2_2\TWM-Proto-2-2.shp

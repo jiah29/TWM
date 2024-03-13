@@ -215,33 +215,25 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> Dict[str, Optiona
         print("==============================================================")
         print("Step 9: Counting Number of Condomininiums within the Closed Route")
 
-        # get connected route feature path from json mapping file
-        connectedRouteFilePath = GetConnectedRouteVersionFilePath(Route)
-        if connectedRouteFilePath == None:
-            print("Skipping step 9 as no connected closed route found for current route")
-            result["Number of Condomininiums within the Route Coverage Area"] = None
-        else:
-            ConnectedRouteFile = dataFolder + connectedRouteFilePath
+        # Convert line feature to polygon
+        ConnectedRoutePolygon = rootFolder + "ConnectedRoutePolygon"
+        arcpy.FeatureToPolygon_management(Route, ConnectedRoutePolygon)
 
-            # convert line feature to polygon
-            ConnectedRoutePolygon = rootFolder + "ConnectedRoutePolygon"
-            arcpy.FeatureToPolygon_management(ConnectedRouteFile, ConnectedRoutePolygon)
+        # Select all the condominiums from property data
+        PropertyFeature = dataFolder + "Property Boundaries\\PROPERTY_BOUNDARIES_WGS84.shp"
+        Condominiums = arcpy.SelectLayerByAttribute_management(PropertyFeature, "NEW_SELECTION", "F_TYPE = 'CONDO'")
 
-            # Select all the condominiums from property data
-            PropertyFeature = dataFolder + "Property Boundaries\\PROPERTY_BOUNDARIES_WGS84.shp"
-            Condominiums = arcpy.SelectLayerByAttribute_management(PropertyFeature, "NEW_SELECTION", "F_TYPE = 'CONDO'")
+        # Count how many condominiums are inside the connected route polygon
+        CondominiumsIntersectionRes = arcpy.SelectLayerByLocation_management(Condominiums, "WITHIN", ConnectedRoutePolygon, "", "SUBSET_SELECTION")
+        result["Number of Condomininiums within the Route Coverage Area"] = int(arcpy.GetCount_management(CondominiumsIntersectionRes).getOutput(0))
 
-            # Count how many condominiums are inside the connected route polygon
-            CondominiumsIntersectionRes = arcpy.SelectLayerByLocation_management(Condominiums, "WITHIN", ConnectedRoutePolygon, "", "SUBSET_SELECTION")
-            result["Number of Condomininiums within the Route Coverage Area"] = int(arcpy.GetCount_management(CondominiumsIntersectionRes).getOutput(0))
+        intermediateFiles.append(CondominiumsIntersectionRes)
+        intermediateFiles.append(Condominiums)
+        intermediateFiles.append(ConnectedRoutePolygon)
 
-            intermediateFiles.append(CondominiumsIntersectionRes)
-            intermediateFiles.append(Condominiums)
-            intermediateFiles.append(ConnectedRoutePolygon)
-
-            print("Finished Counting Number of Condomininiums within the Route Coverage Area: " + str(result["Number of Condomininiums within the Route Coverage Area"]))
-
+        print("Finished Counting Number of Condomininiums within the Route Coverage Area: " + str(result["Number of Condomininiums within the Route Coverage Area"]))
         print("Step 9: Completed in " + str(round((time.time() - startTime), 2)) + " s.")
+        
     except Exception as e:
         result["Error"] = str(e)
     finally:
@@ -257,13 +249,6 @@ def Model(Route: str, BufferSize: int, BufferSizeUnit: str) -> Dict[str, Optiona
         print("Clean up completed in " + str(round((time.time() - startTime), 2)) + " s.")
 
         return result
-
-def GetConnectedRouteVersionFilePath(Route) -> Optional[str] :
-    file = open(rootFolder + 'RouteToConnectedRouteMapping.json')
-    mappings = json.load(file)
-    routeStrip = Route.split("\\")[-1].strip()
-    file.close()
-    return mappings.get(routeStrip, None)
     
 def GetMetrics() -> List[str]:
     return ["Number of Places of Interests", 
