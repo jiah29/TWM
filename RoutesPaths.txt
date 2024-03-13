@@ -1,7 +1,9 @@
 ## ROUTE NAME,ROUTE FILE PATHS FROM DATA FOLDER - FIRST ONE IS ALWAYS THE 2023 BASELINE ROUTE ##
-Baseline Route,2023_TWM_Marathon_Route\2023_TWM_Marathon_Route.shp
-Proto 1 (Loop),TestRoute1\TWM_Marathon_Proto_Route.shp
-Proto 2 (Full Loop),TWM-Route-Proto-2\TWM-Route-Proto-2.shp
-Proto 3 (Quasi-Loop),TWM-Route-Proto-3\TWM-Route-Proto-3.shp
-Proto 4 (Out-and-Backs),TestRoute4\tracks-line.shp
-Proto 5 (TTP),TWM-Route-Proto-5\TWM-Route-Proto-5.shp
+Baseline,TWM-Baseline\TWM-Baseline.shp
+Proto 1.1,TWM-Proto-1_1\route.shp
+Proto 1.2,TWM-Proto-1_2\TWM-Proto-1-2.shp
+Proto 2.1,TWM-Proto-2_1\TWM-Proto-2-1.shp
+Proto 2.2,TWM-Proto-2_2\TWM-Proto-2-2.shp
+Proto 2.3,TWM-Proto-2_3\TWM-Proto-2-3.shp
+Proto 2.4,TWM-Proto-2_4\TWM-Proto-2-4.shp
+Proto 2.5,TWM-Proto-2_5\TWM-Proto-2-5.shp
