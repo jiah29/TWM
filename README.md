@@ -35,7 +35,7 @@ Run this script if you want a simple and easy way to evaluate a list of routes u
 
 This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`.
 
-- Note that it is possible to include more than 1 csv files provided that they are in similar structure/format as shown in `Results.csv`.
+- Note that it is possible to include more than 1 csv files if you wish to add other metrics not included/calculated in th model, provided that they are in similar structure/format as shown in `Results.csv`.
 - By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`.
 
 The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data.
