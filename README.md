@@ -12,7 +12,7 @@ Here are the descriptions and instructions for each script defined:
 
 **Model.py**:
 
-This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other helper functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. The latter function makes use of `RouteToConnectedRouteMapping.json` file to find the connected (closed) route file for a given shp file route. Therefore, the json file should be manually updated with the correct mapping if anything is updated or when new routes are added.
+This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also a helper function, namely GetMetrics, which returns all the metrics used in the model.
 
 Run this script if you want to evaluate and compare a route against the 2023 baseline route. The script takes in 4 arguments:
 
@@ -35,7 +35,7 @@ Run this script if you want a simple and easy way to evaluate a list of routes u
 
 This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`.
 
-- Note that it is possible to include more than 1 csv files provided that they are in similar structure/format as shown in `Results.csv`.
+- Note that it is possible to include more than 1 csv files if you wish to add other metrics not included/calculated in th model, provided that they are in similar structure/format as shown in `Results.csv`.
 - By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`.
 
 The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data.
