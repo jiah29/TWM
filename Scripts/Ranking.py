@@ -47,7 +47,7 @@ def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
                  "Number of Condomininiums within the Route Coverage Area",
                  "Wide Turns",
                  "Sharp Turns",
-                 "Elevations"]
+                 "Elevation Gain"]
 
     weight_provided = 'weight' in df.T.columns
 
@@ -65,13 +65,21 @@ def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 if __name__ == "__main__":
+    # refactor to get a list of csv files and combine them into one dataframe
     if len(sys.argv) < 2:
-        print("Usage: .\Ranking.py {CSVFileContainingResultDF}")
+        print("Usage: .\Ranking.py {at least one CSV files containing result dataframe}.")
         exit(1)
 
     print("Ranking routes based on GIS evaluations...")
+    
+    # loop through all csv files and combine them into one dataframe
+    df = None
 
-    df = pd.read_csv(sys.argv[1], index_col=0)
+    for i in range(1, len(sys.argv)):
+        if i == 1:
+            df = pd.read_csv(sys.argv[i], index_col=0)
+        else:
+            df = df.combine_first(pd.read_csv(sys.argv[i], index_col=0))
     
     dfWithAllMaximingMetrics = ConvertToMaximizingMetrics(df)
 

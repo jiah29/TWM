@@ -12,9 +12,10 @@ Here are the descriptions and instructions for each script defined:
 
 **Model.py**:
 
-This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also two other helper functions, namely GetMetrics, which returns all the metrics used in the model and GetConnectedRouteVersionFilePath, which returns the file path, if any, of the connected (closed) route version of a route file. The latter function makes use of `RouteToConnectedRouteMapping.json` file to find the connected (closed) route file for a given shp file route. Therefore, the json file should be manually updated with the correct mapping if anything is updated or when new routes are added.
+This python file contains the actual GIS model used to evaluate a route, which is defined in the Model function. There are also a helper function, namely GetMetrics, which returns all the metrics used in the model.
 
 Run this script if you want to evaluate and compare a route against the 2023 baseline route. The script takes in 4 arguments:
+
 - Route: the file path to the shapefile of the route you want to evaluate against the baseline
 - Buffer Size: how big the buffer is for the route for GIS evaluation purpose
 - Buffer Size Unit: the unit of the give buffer size above
@@ -32,18 +33,22 @@ Run this script if you want a simple and easy way to evaluate a list of routes u
 
 **Ranking.py**:
 
-This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`. Note that you may manually add other metric to the csv columns if you wish to consider other metrics in the ranking. By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`.The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data. 
+This python scripts contains a maximizing `Rank` function to rank each route based on the result csv returned from `Runner.py`.
+
+- Note that it is possible to include more than 1 csv files if you wish to add other metrics not included/calculated in th model, provided that they are in similar structure/format as shown in `Results.csv`.
+- By default, all metrics have the same weight of 1. If you would like to weight metrics differently, you need to manually add a weight row in the last line of the csv result file with the corresponding weight for each metrics, as shown in the sample `Results.csv`.
+
+The script returns a csv file containing the ranked score for each routes within each metric and overall taking into account all (possibly weighted) metrics. See `RankedRoutes.csv` for a sample of returned data.
 
 There is also a helper function `ConvertToMaximizingMetrics` to convert metrics to a maximing metrics. The current `Rank` function ranks higher raw score with better rank. However, this approach does not work with all metrics, which we might want to minimize. In that case, make sure to put the metrics name in the `toConvert` variable in the `ConvertToMaximizingMetrics` function.
 
-The script takes in 1 argument: 
+The script takes in 1 argument:
+
 - Result CSV: the csv file containing the result returned from running `Runner.py`, with an optional manually added weight row.
 
-It is independent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage. 
+It is independent from the other 2 scripts, and hence does not require an active ArcGIS Pro environment to run. Read the docstring in the python file for example and detailed usage.
 
-Note that there are multiple future extensions to this script that may be implemented, time-permitting:
-1. Allow inputs of multiple csv files with similar format/structure and combining them into one single dataframe for ranking.
-2. Automate the process of including custom metrics
+_Note that in the future, it is possible to automate the process of including custom metrics._
 
 ## Data Sources
 
@@ -57,6 +62,7 @@ Note that there are multiple future extensions to this script that may be implem
 All marathon route data sources are either created by the team or provided by Canada Running Series/Tata Consultancy Services.
 
 ## Resources & Contact
+
 ArcGIS Pro Python and ArcPy reference: https://pro.arcgis.com/en/pro-app/3.1/arcpy/main/arcgis-pro-arcpy-reference.htm
 Running stand-alone python scripts: https://pro.arcgis.com/en/pro-app/3.1/arcpy/get-started/using-conda-with-arcgis-pro.htm
 
