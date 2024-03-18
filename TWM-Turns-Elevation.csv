@@ -1,10 +1,10 @@
-﻿Route,Wide Turns,Sharp Turns,Elevation Gain
-Baseline,11,2,100
-Proto-1.1,7,1,130
-Proto-1.2,7,0,120
-Proto-2.1,5,1,130
-Proto-2.2,5,2,130
-Proto-2.3,7,1,100
-Proto-2.4,5,1,140
-Proto-2.5,9,1,110
-weight,0.25,0.25,0.25
+﻿Route,Wide Turns,Sharp Turns,Elevation Gain,Vehicle Delay,Stopped Delay,Emissions All
+Baseline,11,2,100,9.92,5.75,8.807
+Proto-1.1,7,1,130,9999,9999,9999
+Proto-1.2,7,0,120,9999,9999,9999
+Proto-2.1,5,1,130,10.13,5.87,8.946
+Proto-2.2,5,2,130,10.13,5.87,8.946
+Proto-2.3,7,1,100,9.95,5.81,8.756
+Proto-2.4,5,1,140,9.92,5.75,8.807
+Proto-2.5,9,1,110,10.13,5.87,8.946
+weight,0.25,0.25,0.25,0.15,0.15,0.2
