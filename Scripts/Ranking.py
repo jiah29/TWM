@@ -85,6 +85,9 @@ if __name__ == "__main__":
 
     finalDf = Rank(dfWithAllMaximingMetrics)
 
+    # round off the scores to 2 decimal places
+    finalDf = finalDf.round(2)
+
     print("Finished ranking routes. Exporting to CSV...")
 
     finalDf.to_csv("RankedRoutes.csv")
