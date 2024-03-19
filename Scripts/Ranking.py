@@ -47,7 +47,10 @@ def ConvertToMaximizingMetrics(df: pd.DataFrame) -> pd.DataFrame:
                  "Number of Condomininiums within the Route Coverage Area",
                  "Wide Turns",
                  "Sharp Turns",
-                 "Elevation Gain"]
+                 "Elevation Gain",
+                 "Vehicle Delay",
+                 "Stopped Delay",
+                 "Emissions All"]
 
     weight_provided = 'weight' in df.T.columns
 
