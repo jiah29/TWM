@@ -1,10 +1,10 @@
 Route,Number of Places of Interests,Number of Subway Stations,Number of High Traffic Intersections,Number of Residential Zones,Areas of Business Improvement Areas,Number of Condomininiums within the Route Coverage Area
 Baseline,26,6,41,64,1643388,287
-Proto 1.1,25,8,53,102,2025917,331
-Proto 1.2,26,10,53,103,1992950,352
-Proto 2.1,26,6,48,77,1656599,291
-Proto 2.2,24,10,48,75,1807949,284
-Proto 2.3,25,6,47,79,1786450,304
-Proto 2.4,25,6,44,78,1510850,282
-Proto 2.5,25,6,43,68,1654610,307
+Proto 1.1,23,8,53,95,1925898,331
+Proto 1.2,24,10,53,102,2030085,352
+Proto 2.1,24,6,48,75,1667768,291
+Proto 2.2,22,10,48,72,1785165,284
+Proto 2.3,24,6,47,80,1813750,304
+Proto 2.4,23,6,44,79,1484446,282
+Proto 2.5,23,6,43,65,1625343,307
 weight,0.25,0.25,0.5,0.25,0.25,0.25
