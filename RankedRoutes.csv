@@ -1,9 +1,9 @@
 Route,Areas of Business Improvement Areas Weighted Ranks,Elevation Gain Weighted Ranks,Emissions All Weighted Ranks,Number of Condomininiums within the Route Coverage Area Weighted Ranks,Number of High Traffic Intersections Weighted Ranks,Number of Places of Interests Weighted Ranks,Number of Residential Zones Weighted Ranks,Number of Subway Stations Weighted Ranks,Sharp Turns Weighted Ranks,Stopped Delay Weighted Ranks,Vehicle Delay Weighted Ranks,Wide Turns Weighted Ranks,Overall Weighted Score
-Baseline,0.5,2.0,1.4,1.5,4.0,2.0,0.25,1.25,0.5,1.2,1.2,0.25,1.34
-Proto 1.1,2.0,1.0,0.4,0.5,1.0,1.25,1.75,1.5,1.75,0.3,0.3,1.25,1.08
-Proto 1.2,1.75,1.25,0.4,0.25,1.0,2.0,2.0,2.0,2.0,0.3,0.3,1.25,1.21
-Proto 2.1,1.0,1.0,1.0,1.25,2.0,2.0,1.0,1.25,1.75,0.75,0.75,2.0,1.31
-Proto 2.2,1.5,1.0,1.0,1.75,2.0,0.25,0.75,2.0,0.5,0.75,0.75,2.0,1.19
-Proto 2.3,1.25,2.0,1.6,1.0,2.5,1.25,1.5,1.25,1.75,0.9,0.9,1.25,1.43
-Proto 2.4,0.25,0.25,1.4,2.0,3.0,1.25,1.25,1.25,1.75,1.2,1.2,2.0,1.4
-Proto 2.5,0.75,1.5,1.0,0.75,3.5,1.25,0.5,1.25,1.75,0.75,0.75,0.5,1.19
+Baseline,0.75,2.0,1.4,1.5,4.0,2.0,0.25,1.25,0.75,1.2,1.2,0.25,1.38
+Proto 1.1,1.75,1.25,0.4,0.5,1.0,1.0,1.75,1.5,2.0,0.3,0.3,1.5,1.1
+Proto 1.2,2.0,1.25,0.4,0.25,1.0,1.75,2.0,2.0,2.0,0.3,0.3,1.5,1.23
+Proto 2.1,1.0,1.25,1.0,1.25,2.0,1.75,1.0,1.25,0.75,0.75,0.75,2.0,1.23
+Proto 2.2,1.25,1.25,1.0,1.75,2.0,0.25,0.75,2.0,0.75,0.75,0.75,1.5,1.17
+Proto 2.3,1.5,1.75,1.6,1.0,2.5,1.75,1.5,1.25,2.0,0.9,0.9,1.5,1.51
+Proto 2.4,0.25,0.25,1.4,2.0,3.0,1.0,1.25,1.25,2.0,1.2,1.2,1.75,1.38
+Proto 2.5,0.5,1.75,1.0,0.75,3.5,1.0,0.5,1.25,2.0,0.75,0.75,0.5,1.19
